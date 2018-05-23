@@ -109,7 +109,9 @@ class Session extends \yii\web\Session
     /**
      * Session read handler.
      * Do not call this method directly.
+     *
      * @param string $id session ID
+     *
      * @return string the session data
      */
     public function readSession($id)
@@ -122,19 +124,23 @@ class Session extends \yii\web\Session
     /**
      * Session write handler.
      * Do not call this method directly.
+     *
      * @param string $id session ID
      * @param string $data session data
+     *
      * @return bool whether session write is successful
      */
     public function writeSession($id, $data)
     {
-        return (bool) $this->redis->set($this->calculateKey($id), $data, ['EX'=>$this->getTimeout()]);
+        return (bool)$this->redis->set($this->calculateKey($id), $data, ['EX' => $this->getTimeout()]);
     }
 
     /**
      * Session destroy handler.
      * Do not call this method directly.
+     *
      * @param string $id session ID
+     *
      * @return bool whether session is destroyed successfully
      */
     public function destroySession($id)
@@ -145,7 +151,9 @@ class Session extends \yii\web\Session
 
     /**
      * Generates a unique key used for storing session data in cache.
+     *
      * @param string $id session variable name
+     *
      * @return string a safe cache key associated with the session variable name
      */
     protected function calculateKey($id)

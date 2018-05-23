@@ -55,6 +55,7 @@ return [
                 '10.155.20.167:6380',
 //                'localhost:6379',
             ],
+            'prefix' => '',
             'database' => 0,
         ],
 

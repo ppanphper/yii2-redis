@@ -85,6 +85,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Constructor.
+     *
      * @param string $modelClass the model class associated with this query
      * @param array $config configurations to be applied to the newly created query object
      */
@@ -108,8 +109,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Executes the query and returns all results as an array.
+     *
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return array|ActiveRecord[] the query results. If the query results in nothing, an empty array will be returned.
      */
     public function all($db = null)
@@ -167,8 +170,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Executes the query and returns a single row of result.
+     *
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return ActiveRecord|array|null a single row of query result. Depending on the setting of [[asArray]],
      * the query result may be either an array or an ActiveRecord object. Null will be returned
      * if the query results in nothing.
@@ -212,9 +217,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Returns the number of records.
+     *
      * @param string $q the COUNT expression. This parameter is ignored by this implementation.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return int number of records
      */
     public function count($q = '*', $db = null)
@@ -238,8 +245,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Returns a value indicating whether the query result contains any row of data.
+     *
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return bool whether the query result contains any row of data.
      */
     public function exists($db = null)
@@ -252,9 +261,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Executes the query and returns the first column of the result.
+     *
      * @param string $column name of the column to select
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return array the first column of the query result. An empty array is returned if the query results in nothing.
      */
     public function column($column, $db = null)
@@ -269,9 +280,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Returns the number of records.
+     *
      * @param string $column the column to sum up
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return int number of records
      */
     public function sum($column, $db = null)
@@ -285,10 +298,12 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Returns the average of the specified column values.
+     *
      * @param string $column the column name or expression.
      * Make sure you properly quote column names in the expression.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return int the average of the specified column values.
      */
     public function average($column, $db = null)
@@ -301,10 +316,12 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Returns the minimum of the specified column values.
+     *
      * @param string $column the column name or expression.
      * Make sure you properly quote column names in the expression.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return int the minimum of the specified column values.
      */
     public function min($column, $db = null)
@@ -317,10 +334,12 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Returns the maximum of the specified column values.
+     *
      * @param string $column the column name or expression.
      * Make sure you properly quote column names in the expression.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return int the maximum of the specified column values.
      */
     public function max($column, $db = null)
@@ -334,9 +353,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
     /**
      * Returns the query result as a scalar value.
      * The value returned will be the specified attribute in the first record of the query results.
+     *
      * @param string $attribute name of the attribute to select
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
+     *
      * @return string the value of the specified attribute in the first record of the query result.
      * Null is returned if the query result is empty.
      */
@@ -356,10 +377,12 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Executes a script created by [[LuaScriptBuilder]]
+     *
      * @param Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @param string $type the type of the script to generate
      * @param string $columnName
+     *
      * @throws NotSupportedException
      * @return array|bool|null|string
      */
@@ -399,7 +422,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         // find by primary key if possible. This is much faster than scanning all records
         if (is_array($this->where) && (
                 !isset($this->where[0]) && $modelClass::isPrimaryKey(array_keys($this->where)) ||
-                isset($this->where[0]) && $this->where[0] === 'in' && $modelClass::isPrimaryKey((array) $this->where[1])
+                isset($this->where[0]) && $this->where[0] === 'in' && $modelClass::isPrimaryKey((array)$this->where[1])
             )) {
             return $this->findByPk($db, $type, $columnName);
         }
@@ -412,10 +435,12 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Fetch by pk if possible as this is much faster
+     *
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @param string $type the type of the script to generate
      * @param string $columnName
+     *
      * @return array|bool|null|string
      * @throws \yii\base\InvalidParamException
      * @throws \yii\base\NotSupportedException
@@ -442,9 +467,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         }
 
         if (isset($this->where[0]) && $this->where[0] === 'in') {
-            $pks = (array) $this->where[2];
+            $pks = (array)$this->where[2];
         } elseif (count($this->where) == 1) {
-            $pks = (array) reset($this->where);
+            $pks = (array)reset($this->where);
         } else {
             foreach ($this->where as $values) {
                 if (is_array($values)) {
