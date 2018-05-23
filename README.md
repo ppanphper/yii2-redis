@@ -31,7 +31,7 @@ php composer.phar require --prefer-dist ppanphper/yii2-redis
 or add
 
 ```json
-"ppanphper/yii2-redis": "~2.0.0"
+"ppanphper/yii2-redis": "~1.0.0"
 ```
 
 to the require section of your composer.json.
