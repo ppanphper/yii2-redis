@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\redis;
+namespace ppanphper\redis;
 
 use Yii;
 use yii\base\InvalidConfigException;
