@@ -30,10 +30,5 @@
     },
     "autoload": {
         "psr-4": {"ppanphper\\redis\\": ""}
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        }
     }
 }
