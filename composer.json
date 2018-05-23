@@ -1,17 +1,18 @@
 {
     "name": "ppanphper/yii2-redis",
     "description": "Redis 3.x Cluster Cache, Session and ActiveRecord for the Yii framework",
-    "keywords": [
-        "yii2",
-        "redis",
-        "cluster",
-        "active-record",
-        "cache",
-        "session"
+    "type": "yii2-extension",
+    "require": {
+        "yiisoft/yii2": ">=2.0.4"
+    },
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "ppanphper",
+            "email": "pandy@wdzj.com"
+        }
     ],
     "minimum-stability": "stable",
-    "type": "yii2-extension",
-    "license": "BSD-3-Clause",
     "support": {
         "issues": "https://github.com/ppanphper/yii2-redis/issues",
         "forum": "http://www.yiiframework.com/forum/",
@@ -19,16 +20,12 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/ppanphper/yii2-redis"
     },
-    "authors": [
-        {
-            "name": "ppanphper",
-            "email": "flowphp@gmail.com"
-        }
-    ],
-    "require": {
-        "yiisoft/yii2": ">=2.0.4"
-    },
     "autoload": {
         "psr-4": {"ppanphper\\redis\\": ""}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
     }
 }
