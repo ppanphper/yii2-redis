@@ -7,9 +7,9 @@ you to store active records in redis.
 
 For license information check the [LICENSE](LICENSE.md)-file.
 
-[![Latest Stable Version](https://poser.pugx.org/heyanlong/yii2-redis/v/stable.png)](https://packagist.org/packages/heyanlong/yii2-redis)
-[![Total Downloads](https://poser.pugx.org/heyanlong/yii2-redis/downloads.png)](https://packagist.org/packages/heyanlong/yii2-redis)
-[![Build Status](https://travis-ci.org/heyanlong/yii2-redis.svg?branch=master)](https://travis-ci.org/heyanlong/yii2-redis)
+[![Latest Stable Version](https://poser.pugx.org/ppanphper/yii2-redis/v/stable.png)](https://packagist.org/packages/ppanphper/yii2-redis)
+[![Total Downloads](https://poser.pugx.org/ppanphper/yii2-redis/downloads.png)](https://packagist.org/packages/ppanphper/yii2-redis)
+[![Build Status](https://travis-ci.org/ppanphper/yii2-redis.svg?branch=master)](https://travis-ci.org/ppanphper/yii2-redis)
 
 
 Requirements
