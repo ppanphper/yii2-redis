@@ -21,7 +21,7 @@
         "source": "https://github.com/ppanphper/yii2-redis"
     },
     "autoload": {
-        "psr-4": {"ppanphper\\redis\\": ""}
+        "psr-4": {"ppanphper\\redis\\": "src"}
     },
     "extra": {
         "branch-alias": {
