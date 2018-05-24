@@ -10,7 +10,7 @@ namespace ppanphper\redis;
 use Yii;
 use yii\base\Component;
 use yii\base\UnknownMethodException;
-use yii\db\Exception;
+use \Exception;
 use \Redis;
 use \RedisException;
 use \RedisCluster;
@@ -64,8 +64,22 @@ class Connection extends Component
      */
     public $dataTimeout = null;
 
+    /**
+     * @var bool
+     */
     public $persistent = false;
 
+    /**
+     * cluster nodes
+     *
+     * @var array
+     *
+     * [
+     *  'hostname:port',
+     *  'hostname:port',
+     *  ...
+     * ]
+     */
     public $servers = [];
 
     /**
@@ -76,14 +90,24 @@ class Connection extends Component
     public $clientType = self::CLIENT_TYPE_PHP_REDIS_CLUSTER;
 
     /**
-     * 是否使用
+     * 是否使用igbinary扩展序列化/反序列化
      *
      * @var bool
      */
     public $useIGBinary = false;
 
+    /**
+     * Redis instance
+     *
+     * @var
+     */
     private $_redis;
 
+    /**
+     * Key prefix
+     *
+     * @var string
+     */
     public $prefix = '';
 
     /**
@@ -191,6 +215,92 @@ class Connection extends Component
     }
 
     /**
+     * @param $scriptKey
+     * @param array|string $keys 键名
+     * @param array|string $args 参数
+     *
+     * @return bool|mixed
+     * @throws Exception
+     *
+     * @example
+     * client->evalScript('incr', 'test', 100); // incr, key, 过期时间
+     * 增量计数器，超过最大值就重置为0
+     * client->evalScript('incr_reset', 'test', [maxCounter, 100]); // incr_reset, key, [最大值, 过期时间]
+     * 增量计数器，如果当前值没有大于限定值，才可以加一并返回[1, 累加后的值]，否则返回[0, 当前值]
+     * client->evalScript('incr_max', 'test', [maxCounter, 100]); // incr_max, key, [最大值, 过期时间]
+     *
+     */
+    public function evalScript($scriptKey, $keys, $args=[]) {
+        if(!isset($this->_funcTable[$scriptKey]) || empty($this->_funcTable[$scriptKey]['script'])) {
+            throw new Exception(__METHOD__ . ' please configure '.$scriptKey.' script');
+        }
+        if(empty($this->_funcTable[$scriptKey]['sha1'])) {
+            $this->_funcTable[$scriptKey]['sha1'] = sha1($this->_funcTable[$scriptKey]['script']);
+        }
+        $sha1 = $this->_funcTable[$scriptKey]['sha1'];
+        $result = false;
+        try {
+            if ($this->getHandle() === null) throw new Exception('Redis connection failed. Check your configuration.');
+
+            if(!is_array($keys)) {
+                $keys = [$keys];
+            }
+            if(!is_array($args)) {
+                $args = [$args];
+            }
+            $keyCount = count($keys);
+            // 不需要键名索引，用数字重新建立索引
+            $args = array_values(array_merge($keys, $args));
+            for($i =0; $i < 2; $i++) {
+                $result = $this->_redis->evalSha($sha1, $args, $keyCount);
+                if($result === false && $i === 0) {
+                    $errorMsg = $this->_redis->getLastError();
+                    $this->_redis->clearLastError();
+                    // 该脚本不存在该节点上，需要执行load
+                    if(stripos($errorMsg, 'NOSCRIPT') !== false) {
+                        // 单机
+                        if($this->clientType == self::CLIENT_TYPE_PHP_REDIS) {
+                            $loadParams = [
+                                'load',
+                                $this->_funcTable[$scriptKey]['script']
+                            ];
+                        }
+                        // 集群
+                        else {
+                            // 取Key用来定位节点
+                            $key = $keys;
+                            if(is_array($keys)) {
+                                $key = $keys[0];
+                            }
+                            $loadParams = [
+                                $key,
+                                'load',
+                                $this->_funcTable[$scriptKey]['script']
+                            ];
+                        }
+                        // load脚本
+                        $serverSha1 = $this->_redis->script(...$loadParams);
+                        // 在开发阶段解决这个错误
+                        if($serverSha1 !== $sha1) {
+                            throw new Exception($scriptKey.' The SHA1 of the script is inconsistent with the SHA1 returned by the server. '.$sha1.'=='.$serverSha1, 999);
+                        }
+                        continue;
+                    }
+                }
+                break;
+            }
+        } catch (Exception $e) {
+            // 如果是开发阶段能解决的错误，就抛出去
+            if($e->getCode() === 999) {
+                throw new Exception($e->getMessage(), $e->getCode());
+            }
+            $result = false;
+            Yii::warning(__METHOD__.' = '. $e->getMessage());
+        }
+        return $result;
+    }
+
+    /**
      * 检测是否支持igbinary扩展, 用于数据序列化
      * @return bool
      */
@@ -264,6 +374,14 @@ class Connection extends Component
     public function getDriverName()
     {
         return 'redis';
+    }
+
+    /**
+     * @return LuaScriptBuilder
+     */
+    public function getLuaScriptBuilder()
+    {
+        return new LuaScriptBuilder();
     }
 
     /**
