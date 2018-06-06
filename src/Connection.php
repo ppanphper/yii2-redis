@@ -1,8 +1,7 @@
 <?php
 /**
- * @link http://www.heyanlong.com/
- * @copyright Copyright (c) 2015 heyanlong.com
- * @license http://www.heyanlong.com/license/
+ * @author DongYang Pan <flowphp@gmail.com>
+ * @since 1.0
  */
 
 namespace ppanphper\redis;
